@@ -4,6 +4,10 @@ import { StatusBadge } from "../components/StatusBadge";
 import { api, getErrorMessage } from "../lib/api";
 import type { Interest, InterestStatus } from "../lib/types";
 
+const userName = (user: Interest["fromUserId"] | Interest["toUserId"] | null | undefined) => {
+  return user?.name || "Unknown user";
+};
+
 export function InterestsPage() {
   const [sent, setSent] = useState<Interest[]>([]);
   const [received, setReceived] = useState<Interest[]>([]);
@@ -83,8 +87,8 @@ export function InterestsPage() {
               <tbody className="divide-y divide-slate-100">
                 {rows.map((interest) => (
                   <tr key={interest._id}>
-                    <td className="px-5 py-4 font-semibold text-ink">{interest.fromUserId.name}</td>
-                    <td className="px-5 py-4 text-slate-600">{interest.toUserId.name}</td>
+                    <td className="px-5 py-4 font-semibold text-ink">{userName(interest.fromUserId)}</td>
+                    <td className="px-5 py-4 text-slate-600">{userName(interest.toUserId)}</td>
                     <td className="px-5 py-4 text-slate-600">{new Date(interest.date).toLocaleDateString()}</td>
                     <td className="px-5 py-4"><StatusBadge status={interest.status} /></td>
                     <td className="px-5 py-4">
