@@ -1,15 +1,17 @@
 // @ts-nocheck
 import { Link } from "@tanstack/react-router";
 import { Heart, Lock } from "lucide-react";
-import type { Profile } from "../lib/types";
+import { StatusBadge } from "./StatusBadge";
+import type { InterestStatus, Profile } from "../lib/types";
 
 type ProfileCardProps = {
   profile: Profile;
   onSendInterest: (profile: Profile) => void;
   sending?: boolean;
+  interestStatus?: InterestStatus;
 };
 
-export function ProfileCard({ profile, onSendInterest, sending }: ProfileCardProps) {
+export function ProfileCard({ profile, onSendInterest, sending, interestStatus }: ProfileCardProps) {
   return (
     <article className="card overflow-hidden">
       <div className="h-52 bg-blush">
@@ -23,9 +25,12 @@ export function ProfileCard({ profile, onSendInterest, sending }: ProfileCardPro
       </div>
       <div className="space-y-5 p-5">
         <div>
-          <Link to="/profile/$profileId" params={{ profileId: profile._id }} className="text-xl font-bold text-ink hover:text-rosewood">
-            {profile.name}
-          </Link>
+          <div className="flex items-start justify-between gap-3">
+            <Link to="/profile/$profileId" params={{ profileId: profile._id }} className="text-xl font-bold text-ink hover:text-rosewood">
+              {profile.name}
+            </Link>
+            {interestStatus ? <StatusBadge status={interestStatus} /> : null}
+          </div>
           <p className="mt-1 text-sm text-slate-500">
             {profile.age ? `${profile.age} years` : "Age not added"} / {profile.gender || "Gender not added"}
           </p>
@@ -38,9 +43,9 @@ export function ProfileCard({ profile, onSendInterest, sending }: ProfileCardPro
           </p>
         </div>
 
-        <button className="btn-primary w-full" onClick={() => onSendInterest(profile)} disabled={sending}>
+        <button className="btn-primary w-full" onClick={() => onSendInterest(profile)} disabled={sending || Boolean(interestStatus)}>
           <Heart size={17} />
-          {sending ? "Sending..." : "Send Interest"}
+          {sending ? "Sending..." : interestStatus ? "Interest Sent" : "Send Interest"}
         </button>
       </div>
     </article>

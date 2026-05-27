@@ -3,9 +3,10 @@ import { FormEvent, useEffect, useState } from "react";
 import { ProfileCard } from "../components/ProfileCard";
 import { api, getErrorMessage } from "../lib/api";
 import { useAuthStore } from "../lib/store";
-import type { Profile } from "../lib/types";
+import type { Interest, InterestStatus, Profile } from "../lib/types";
 
 const userIdOf = (userValue: Profile["userId"]) => userValue.id || userValue._id || "";
+const interestUserIdOf = (userValue: Interest["toUserId"]) => userValue?.id || userValue?._id || "";
 
 export function BrowsePage() {
   const user = useAuthStore((state) => state.user);
@@ -14,13 +15,27 @@ export function BrowsePage() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [sendingId, setSendingId] = useState("");
+  const [sentInterestStatus, setSentInterestStatus] = useState<Record<string, InterestStatus>>({});
 
   const loadProfiles = async () => {
     setLoading(true);
     setMessage("");
     try {
-      const { data } = await api.get<Profile[]>("/profile/all", { params: filters });
-      setProfiles(data.filter((profile) => userIdOf(profile.userId) !== user?.id));
+      const [profilesRes, sentRes] = await Promise.all([
+        api.get<Profile[]>("/profile/all", { params: filters }),
+        api.get<Interest[]>("/interests/sent")
+      ]);
+      const nextStatus: Record<string, InterestStatus> = {};
+
+      sentRes.data.forEach((interest) => {
+        const toUserId = interestUserIdOf(interest.toUserId);
+        if (toUserId) {
+          nextStatus[toUserId] = interest.status;
+        }
+      });
+
+      setSentInterestStatus(nextStatus);
+      setProfiles(profilesRes.data.filter((profile) => userIdOf(profile.userId) !== user?.id));
     } catch (err) {
       setMessage(getErrorMessage(err));
     } finally {
@@ -43,6 +58,7 @@ export function BrowsePage() {
     try {
       await api.post(`/interests/send/${userIdOf(profile.userId)}`);
       setMessage(`Interest sent to ${profile.name}.`);
+      await loadProfiles();
     } catch (err) {
       setMessage(getErrorMessage(err));
     } finally {
@@ -79,7 +95,13 @@ export function BrowsePage() {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {profiles.map((profile) => (
-            <ProfileCard key={profile._id} profile={profile} onSendInterest={sendInterest} sending={sendingId === profile._id} />
+            <ProfileCard
+              key={profile._id}
+              profile={profile}
+              onSendInterest={sendInterest}
+              sending={sendingId === profile._id}
+              interestStatus={sentInterestStatus[userIdOf(profile.userId)]}
+            />
           ))}
         </div>
       )}
