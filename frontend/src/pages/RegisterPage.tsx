@@ -31,7 +31,7 @@ export function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center px-5 py-12">
       <div className="card w-full max-w-lg p-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-rosewood">Mark 1</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-rosewood">PENTECOST MATRIMONY</p>
         <h1 className="mt-3 text-3xl font-bold text-ink">Create your account</h1>
         <p className="mt-2 text-sm text-slate-500">Register, complete your profile, and start discovering matches.</p>
 

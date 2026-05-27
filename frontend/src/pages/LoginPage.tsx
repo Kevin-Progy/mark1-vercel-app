@@ -37,9 +37,9 @@ export function LoginPage() {
           <div className="mb-12 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15">
             <HeartHandshake size={30} />
           </div>
-          <h1 className="text-5xl font-bold tracking-normal sm:text-6xl">Mark 1</h1>
+          <h1 className="text-5xl font-bold tracking-normal sm:text-6xl">PENTECOST MATRIMONY</h1>
           <p className="mt-6 text-lg leading-8 text-white/80">
-            A refined matrimonial workspace for discovering families, sharing intent, and building meaningful matches.
+            Ecclesiastes 3:11 He hath made every thing beautiful in his time
           </p>
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
             {["Verified profiles", "Real interests", "Admin review"].map((item) => (
