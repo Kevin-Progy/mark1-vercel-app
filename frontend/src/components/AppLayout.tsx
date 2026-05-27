@@ -23,8 +23,7 @@ export function AppLayout({ children }: { children?: ReactNode }) {
               M1
             </span>
             <div>
-              <p className="text-lg font-bold text-ink">Mark 1</p>
-              <p className="text-xs font-medium text-slate-500">Matrimonial connections</p>
+              <p className="text-lg font-bold text-ink">PENTECOST MATRIMONY</p>
             </div>
           </Link>
 
